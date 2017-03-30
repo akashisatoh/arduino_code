@@ -1,0 +1,2 @@
+・Arduinoを経由してWROOM02とPCで通信するためのスケッチ
+・ボーレートはPCーWROOM02間とArduinoーWROOM02間で合わせたほうがよかったかも
