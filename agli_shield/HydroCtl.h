@@ -1,3 +1,4 @@
+//ポンプをオンする関数、電磁弁を動かす関数、EC値、水量などをシールドのセンサー値を読み取るライブラリ！
 #ifndef HYDROCTL_H_
 #define HYDROCTL_H_
 
