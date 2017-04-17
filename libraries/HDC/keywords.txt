@@ -1,0 +1,18 @@
+#######################################
+# Syntax Coloring Map For HDC
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+HDC	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+Init	KEYWORD2
+Receive	KEYWORD2
+Send	KEYWORD2
+Read	KEYWORD2
+
