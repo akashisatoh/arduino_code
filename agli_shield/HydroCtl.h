@@ -7,7 +7,7 @@
 
 class HydroCtlClass{
 	private:
-
+    static uint32_t    freq;
     static float    waterTemp;
     static uint8_t  waterLevel;
 
