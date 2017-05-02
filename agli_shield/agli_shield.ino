@@ -1,20 +1,20 @@
 #include <Wire.h>
 #include <Arduino.h>
-#include <HydroCtl.h>
+#include "HydroCtl.h"
 
-/*
+
 #define pin_pump1 6
 #define pin_pump2 7
 #define pin_solenoid 5
 #define pin_temp 0 
 #define pin_hum 1
-*/
+
 int receive_data[9];
-int pin_pump1 = 6;
+HydroCtlClass ctl(pin_pump1, pin_pump2, pin_solenoid, pin_temp, pin_hum);
+
 void setup() {
   // put your setup code here, to run once:
   //master  としてI2C
-  
   Wire.begin();
   Serial.begin(9600);
 
@@ -40,42 +40,35 @@ void loop() {
       break;
     case '1':
       //pump on
-      turnOnPump((int)pin_pump1);
-      Serial.print("turn on pump1"); 
+      ctl.turnOnPump((int)pin_pump1);
+      Serial.print("ctl.turn on pump1"); 
       break;
     case '2':
-
-      turnOnPump((int)pin_pump2);
-      Serial.print("turn on pump2"); 
+      ctl.turnOnPump((int)pin_pump2);
+      Serial.print("ctl.turn on pump2"); 
       break;
     case '3':
-
-      turnOffPump((int)pin_pump1);
-      Serial.print("turn off pump1"); 
+      ctl.turnOffPump((int)pin_pump1);
+      Serial.print("ctl.turn off pump1"); 
       break;
     case '4':
-
-      turnOffPump((int)pin_pump2);
-      Serial.print("turn off pump2"); 
+      ctl.turnOffPump((int)pin_pump2);
+      Serial.print("ctl.turn off pump2"); 
       break;
     case '5':
-
-      turnOnSolenoid((int)pin_solenoid);
-      Serial.print("turn on solenoid"); 
+      ctl.turnOnSolenoid((int)pin_solenoid);
+      Serial.print("ctl.turn on solenoid"); 
       break;
     case '6':
-
-      turnOffSolenoid((int)pin_solenoid);
-      Serial.print("turn off solenoid"); 
+      ctl.turnOffSolenoid((int)pin_solenoid);
+      Serial.print("ctl.turn off solenoid"); 
       break;
     case '7':
-
-      getTemp((int)pin_temp);
+      ctl.getTemp((int)pin_temp);
       Serial.print("get temp"); 
       break;
     case '8':
-
-      getHum((int)pin_hum):
+      ctl.getHum((int)pin_hum);
       Serial.print("get hum"); 
       break;
     default:

@@ -3,10 +3,20 @@
 #include <Wire.h>
 
 
-HydroCtlClass::HydroCtlClass(){
+HydroCtlClass::HydroCtlClass(int pump1, int pump2, int sole, int temp, int hum){
     freq = 0;
     waterTemp = 0;
     waterLevel = 0;
+    pin_pump1 = pump1;
+    pin_pump2 = pump2;
+    pin_solenoid = sole;
+    pin_temp = temp;
+    pin_hum = hum;
+    pinMode(pin_pump1, OUTPUT);
+    pinMode(pin_pump2, OUTPUT);
+    pinMode(pin_solenoid, OUTPUT);
+    analogRead(pin_temp);
+    analogRead(pin_hum);
 }
 
 static void     begin(void){
@@ -25,19 +35,17 @@ static int8_t   turnOnSolenoid(int solenoidId){
   //電磁弁
   digitalWrite(solenoidId, HIGH);
 }
-static int8_t   turnOffSorenoid(int solenoidId){
+static int8_t   turnOffSolenoid(int solenoidId){
   //電磁弁
   digitalWrite(solenoidId, LOW);
 }
 
-static uint32_t getEcValue(int data[]){
+static uint32_t getEcValue(){
   //EC値を取得
-  
   
 }
 
-static float    getWaterTemp(int data[]){
-  //水温を取得
+static float    getWaterTemp(){
   //waterTemp = data >> 40;
   //waterTemp = data & 0xFFFFFFFF;
   //return waterTemp;
@@ -56,11 +64,11 @@ static bool     isFull(void){
   //水量はOKであることを伝える
 }
 
-static void     update(int data[]){
+static void     update(void){
   //現在の状態を更新する
   float temp;
-  //temp= getTemp(data);
-  //freq = getEcValue(data);
+  //temp= getTemp(pin_temp);
+  //this.freq = getEcValue();
   
 }
 
