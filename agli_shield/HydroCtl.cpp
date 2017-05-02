@@ -2,8 +2,11 @@
 #include "HydroCtl.h"
 #include <Wire.h>
 
-HydroCtl::HydroCtl(){
-  
+
+HydroCtlClass::HydroCtlClass(){
+    freq = 0;
+    waterTemp = 0;
+    waterLevel = 0;
 }
 
 static void     begin(void){
@@ -27,23 +30,17 @@ static int8_t   turnOffSorenoid(uint8_t solenoidId){
   digitalWrite(solenoidId, LOW);
 }
 
-static void     update(uint8_t[] data){
-  //現在の状態を更新する
-  waterTemp = getTemp(data);
-  frec = getEcValue(data);
-  
-}
-
-static uint32_t getEcValue(uint8_t[] data){
+static uint32_t getEcValue(uint8_t data[]){
   //EC値を取得
   
   
 }
-static float    getWaterTemp(uint8_t[] data){
+
+static float    getWaterTemp(uint8_t data[]){
   //水温を取得
-  float temp = data >> 40;
-  temp = data & 0xFFFFFFFF;
-  return temp;
+  //waterTemp = data >> 40;
+  //waterTemp = data & 0xFFFFFFFF;
+  //return waterTemp;
 }
 static float    getTemp(uint8_t tempId){
   //気温を取得
@@ -57,5 +54,13 @@ static bool     isEmpty(void){
 }
 static bool     isFull(void){
   //水量はOKであることを伝える
+}
+
+static void     update(uint8_t data[]){
+  //現在の状態を更新する
+  float temp;
+  //temp= getTemp(data);
+  //freq = getEcValue(data);
+  
 }
 

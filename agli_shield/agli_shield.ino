@@ -1,11 +1,12 @@
 #include "HydroCtl.h"
 #include <Wire.h>
+#include <Arduino.h>
 
-#define pin_pump1 //ポンプ1
-#define pin_pump2 //ポンプ2
-#define pin_solenoid //電磁弁1
-#define pin_temp //温度計用ピン
-#define pin_hum //光量用ピン
+#define pin_pump1 6 //ポンプ1
+#define pin_pump2 7 //ポンプ2
+#define pin_solenoid 5 //電磁弁1
+#define pin_temp 0 //温度計用ピン
+#define pin_hum 1 //光量用ピン
 
 uint8_t receive_data[9];
 
@@ -29,6 +30,7 @@ void loop() {
       //update
       //受け取った9バイトから水温、EC値、水量のHigh or Lowを解析
       //Wire.read（）は1バイトずつしか受け取れない！！！
+      Serial.print("update");
       break;
     case 'q':
       //exit
