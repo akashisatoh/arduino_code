@@ -9,26 +9,26 @@ class HydroCtlClass{
 	private:
     static uint32_t    freq;
     static float    waterTemp;
-    static uint8_t  waterLevel;
+    static int  waterLevel;
 
 		
 	public:
     HydroCtlClass();
 		static void     begin(void);
 		
-		static int8_t   turnOnPump(uint8_t  pumpId);
-		static int8_t   turnOffPump(uint8_t  pumpId);
+		static int8_t   turnOnPump(int  pumpId);
+		static int8_t   turnOffPump(int  pumpId);
 
 
-		static int8_t   turnOnSolenoid(uint8_t solenoidId);
-		static int8_t   turnOffSorenoid(uint8_t solenoidId);
+		static int8_t   turnOnSolenoid(int solenoidId);
+		static int8_t   turnOffSorenoid(int solenoidId);
     
     static void     update(void);
     
     static uint32_t getEcValue(void);
     static float    getWaterTemp(void);
-    static float    getTemp(uint8_t tempId);
-    static float    getHum(uint8_t humId);
+    static float    getTemp(int tempId);
+    static float    getHum(int humId);
 
     
     static bool     isEmpty(void);
