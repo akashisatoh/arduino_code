@@ -7,19 +7,17 @@
 
 class HydroCtlClass{
 	private:
-    
+   uint32_t   freq;
+   float      waterTemp;
+   int        waterLevel;
+   int        pin_pump1;
+   int        pin_pump2;
+   int        pin_solenoid;
+   int        pin_temp;
+   int        pin_hum;
 
 		
 	public:
-	  static uint32_t   freq;
-    static float      waterTemp;
-    static int        waterLevel;
-    static int        pin_pump1;
-    static int        pin_pump2;
-    static int        pin_solenoid;
-    static int        pin_temp;
-    static int        pin_hum;
-    
     HydroCtlClass(int pump1, int pump2, int sole, int temp, int hum);
 		static void     begin(void);
 		

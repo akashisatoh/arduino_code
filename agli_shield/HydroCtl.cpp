@@ -19,52 +19,52 @@ HydroCtlClass::HydroCtlClass(int pump1, int pump2, int sole, int temp, int hum){
     analogRead(pin_hum);
 }
 
-static void     begin(void){
+static void     HydroCtlClass::begin(void){
   
 }
 
-static int8_t   turnOnPump(int  pumpId){
+static int8_t   HydroCtlClass::turnOnPump(int  pumpId){
   //ポンプを動かす命令
   digitalWrite(pumpId, HIGH);
 }
-static int8_t   turnOffPump(int  pumpId){
+static int8_t   HydroCtlClass::turnOffPump(int  pumpId){
   //ポンプを止める命令
   digitalWrite(pumpId, LOW);
 }
-static int8_t   turnOnSolenoid(int solenoidId){
+static int8_t   HydroCtlClass::turnOnSolenoid(int solenoidId){
   //電磁弁
   digitalWrite(solenoidId, HIGH);
 }
-static int8_t   turnOffSolenoid(int solenoidId){
+static int8_t   HydroCtlClass::turnOffSolenoid(int solenoidId){
   //電磁弁
   digitalWrite(solenoidId, LOW);
 }
 
-static uint32_t getEcValue(){
+static uint32_t HydroCtlClass::getEcValue(){
   //EC値を取得
   
 }
 
-static float    getWaterTemp(){
+static float    HydroCtlClass::getWaterTemp(){
   //waterTemp = data >> 40;
   //waterTemp = data & 0xFFFFFFFF;
   //return waterTemp;
 }
-static float    getTemp(int tempId){
+static float    HydroCtlClass::getTemp(int tempId){
   //気温を取得
 }
-static float    getHum(int humId){
+static float    HydroCtlClass::getHum(int humId){
   //光量を取得
 }
 
-static bool     isEmpty(void){
+static bool     HydroCtlClass::isEmpty(void){
   //水量が無いことを伝える
 }
-static bool     isFull(void){
+static bool     HydroCtlClass::isFull(void){
   //水量はOKであることを伝える
 }
 
-static void     update(void){
+static void     HydroCtlClass::update(void){
   //現在の状態を更新する
   float temp;
   //temp= getTemp(pin_temp);
