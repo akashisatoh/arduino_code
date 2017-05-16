@@ -16,7 +16,7 @@ HydroCtlClass ctl = HydroCtlClass(pin_pump1, pin_pump2, pin_solenoid, pin_temp, 
 void setup() {
   // put your setup code here, to run once:
   //master  としてI2C
-  //Wire.begin();
+  Wire.begin();
   Serial.begin(9600);
   while(!Serial);
   Serial.print("start");
@@ -25,7 +25,11 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
 
-  //Wire.requestFrom(8, 9);
+  Wire.requestFrom(8, 9);
+  while(Wire.available()){
+    byte b = Wire.read();
+    Serial.println(b);
+  }
   
   uint8_t inputchar;
   while((inputchar = Serial.read()) == 255){
