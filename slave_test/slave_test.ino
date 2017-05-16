@@ -80,10 +80,12 @@ void setFreq() {
   delay(5);
 
   // フラグが立つまで待機
-  while (!FreqCount.available()) {}
+  //while (!FreqCount.available()) {}
 
   // 周波数はret.reg[4-7]に格納(4byte)
-  ret.freq[1] = FreqCount.read();
+  //ret.freq[1] = FreqCount.read();
+  ret.freq[1] = 1000;
+  ret.freq[1] = ret.freq[1] | 0;
 
   // 発振終了
   digitalWrite(EC_SW, LOW);
@@ -91,10 +93,11 @@ void setFreq() {
 
 // 水温を取得して共用体に格納する
 void setWtmp() {
-  uint16_t val = analogRead(WTMP);
-
+  //uint16_t val = analogRead(WTMP);
+  
   // センサの値を電圧に変換
-  ret.temp = map_f(val, 0, 1023, 0, VAREF);
+  //ret.temp = map_f(val, 0, 1023, 0, VAREF);
+  ret.temp = 20.4;
 }
 
 // 水位状態を取得して共用体に格納する
@@ -108,7 +111,8 @@ void setWlevel() {
   uint8_t valL = digitalRead(WL_L);
 
   // 下位2bitに状態を格納
-  ret.reg[8] = valH << 1 | valL;
+  //ret.reg[8] = valH << 1 | valL;
+  ret.reg[8] = B00000011;
 
   // 発振終了
   digitalWrite(WL_SW, LOW);
