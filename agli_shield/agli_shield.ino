@@ -10,7 +10,7 @@
 #define pin_hum 1
 #define pin_ill 24
 
-int receive_data[9];
+uint8_t receive_data[9];
 HydroCtlClass ctl = HydroCtlClass(pin_pump1, pin_pump2, pin_solenoid, pin_temp, pin_hum, pin_ill);
 
 void setup() {
@@ -24,12 +24,23 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-
+  int index = 0;
   Wire.requestFrom(8, 9);
   while(Wire.available()){
-    byte b = Wire.read();
-    Serial.println(b);
+    receive_data[index] = Wire.read();
+    Serial.println(receive_data[index]);
+    index++;
+    if(index > 9)
+      break;
   }
+  for(int i=0; i<9; i++){
+    Serial.write("value:");
+    Serial.println(receive_data[i]);
+  }
+  uint32_t ec;
+  ec = ctl.getEcValue(receive_data);
+  Serial.write("ec:");
+  Serial.println(ec);
   
   uint8_t inputchar;
   while((inputchar = Serial.read()) == 255){

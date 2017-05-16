@@ -34,22 +34,27 @@ static int8_t   HydroCtlClass::turnOnSolenoid(){
   //電磁弁
   digitalWrite(pin_solenoid, HIGH);
 }
-static int8_t   HydroCtlClass::turnOffSolenoid(){
+ int8_t   HydroCtlClass::turnOffSolenoid(){
   //電磁弁
   digitalWrite(pin_solenoid, LOW);
 }
 
-static uint32_t HydroCtlClass::getEcValue(){
+ uint32_t HydroCtlClass::getEcValue(uint8_t data[]){
   //EC値を取得
   //I2C
+
+  //まずは周波数を取得
+  uint32_t ecValue;
+  ecValue = (uint32_t)data[4];
+  return ecValue;
 }
 
-static float    HydroCtlClass::getWaterTemp(){
+ float    HydroCtlClass::getWaterTemp(uint8_t data[]){
   //水温を取得
   //I2C
 }
 
-void HydroCtlClass::getSensorValues(){
+void HydroCtlClass::getSensorValues(uint8_t data[]){
   //孫（製品版では子）基盤かI2C通信してデータを取得
   //その後値をそれぞれ取得する
 }
@@ -72,8 +77,12 @@ static float    HydroCtlClass::getIll(){
   return analogRead(pin_ill);
 }
 
-bool     HydroCtlClass::isEmpty(void){
+bool     HydroCtlClass::isFull(void){
   //水量はOKであることを伝える
+}
+
+bool     HydroCtlClass::isEmpty(void){
+  //水量が0であることを伝える
 }
 
 static void     HydroCtlClass::update(void){

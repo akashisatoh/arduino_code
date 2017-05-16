@@ -31,14 +31,15 @@ class HydroCtlClass{
     
     static void     update(void);
     
-    uint32_t getEcValue(void);
-    float    getWaterTemp(void);
-    void getSensorValues();
+    uint32_t getEcValue(uint8_t[]);
+    float    getWaterTemp(uint8_t[]);
+    void getSensorValues(uint8_t[]);
     int waterEmpty();
     float    getTemp();
     float    getHum();
     float    getIll();
 
+    bool     isFull(void);
     bool     isEmpty(void);
 };
 
