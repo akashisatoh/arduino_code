@@ -15,7 +15,7 @@ HydroCtlClass ctl = HydroCtlClass(pin_pump1, pin_pump2, pin_solenoid, pin_temp, 
 
 void setup() {
   // put your setup code here, to run once:
-  //master  としてI2C
+  //master  縺ｨ縺励※I2C
   Wire.begin();
   Serial.begin(9600);
   while(!Serial);
@@ -33,14 +33,18 @@ void loop() {
     if(index > 9)
       break;
   }
-  for(int i=0; i<9; i++){
-    Serial.write("value:");
-    Serial.println(receive_data[i]);
+  uint32_t tmp[4];
+  for(int i=0; i<4; i++){
+    tmp[i] = receive_data[i+4];
+    String str = String(tmp[i], BIN);
+    Serial.println(str);
   }
+
   uint32_t ec;
   ec = ctl.getEcValue(receive_data);
   Serial.write("ec:");
-  Serial.println(ec);
+  String str = String(ec, BIN);
+  Serial.println(str);
   
   uint8_t inputchar;
   while((inputchar = Serial.read()) == 255){
@@ -50,8 +54,8 @@ void loop() {
   switch(inputchar){
     case 'u':
       //update
-      //受け取った9バイトから水温、EC値、水量のHigh or Lowを解析
-      //Wire.read（）は1バイトずつしか受け取れない！！！
+      //蜿励￠蜿悶▲縺�9繝舌う繝医°繧画ｰｴ貂ｩ縲・C蛟､縲∵ｰｴ驥上�ｮHigh or Low繧定ｧ｣譫�
+      //Wire.read�ｼ茨ｼ峨�ｯ1繝舌う繝医★縺､縺励°蜿励￠蜿悶ｌ縺ｪ縺�ｼ�ｼ�ｼ�
       Serial.write("update");
       break;
     case 'q':
@@ -119,5 +123,6 @@ void loop() {
   
 
 }
+
 
 

@@ -23,70 +23,78 @@ static void     HydroCtlClass::begin(void){
 }
 
 static int8_t   HydroCtlClass::turnOnPump(int  pumpId){
-  //ポンプを動かす命令
+  //繝昴Φ繝励ｒ蜍輔°縺吝多莉､
   digitalWrite(pumpId, HIGH);
 }
 static int8_t   HydroCtlClass::turnOffPump(int  pumpId){
-  //ポンプを止める命令
+  //繝昴Φ繝励ｒ豁｢繧√ｋ蜻ｽ莉､
   digitalWrite(pumpId, LOW);
 }
 static int8_t   HydroCtlClass::turnOnSolenoid(){
-  //電磁弁
+  //髮ｻ逎∝ｼ�
   digitalWrite(pin_solenoid, HIGH);
 }
  int8_t   HydroCtlClass::turnOffSolenoid(){
-  //電磁弁
+  //髮ｻ逎∝ｼ�
   digitalWrite(pin_solenoid, LOW);
 }
 
  uint32_t HydroCtlClass::getEcValue(uint8_t data[]){
-  //EC値を取得
+  //EC蛟､繧貞叙蠕�
   //I2C
 
-  //まずは周波数を取得
+  //縺ｾ縺壹�ｯ蜻ｨ豕｢謨ｰ繧貞叙蠕�
+  uint32_t tmp[4];
   uint32_t ecValue;
-  ecValue = (uint32_t)data[4];
+  
+  for(int i=0; i<4; i++){
+    tmp[i] = data[i+4];
+  }
+  
+  ecValue = 0;
+  ecValue = tmp[0] << 24 | tmp[1] << 16 | tmp[2] << 8 | tmp[3]; ;
   return ecValue;
 }
 
  float    HydroCtlClass::getWaterTemp(uint8_t data[]){
-  //水温を取得
+  //豌ｴ貂ｩ繧貞叙蠕�
   //I2C
 }
 
 void HydroCtlClass::getSensorValues(uint8_t data[]){
-  //孫（製品版では子）基盤かI2C通信してデータを取得
-  //その後値をそれぞれ取得する
+  //蟄ｫ�ｼ郁｣ｽ蜩∫沿縺ｧ縺ｯ蟄撰ｼ牙渕逶､縺紀2C騾壻ｿ｡縺励※繝�繝ｼ繧ｿ繧貞叙蠕�
+  //縺昴�ｮ蠕悟�､繧偵◎繧後◇繧悟叙蠕励☆繧�
 }
 
 int HydroCtlClass::waterEmpty(){
-  //水が入っているかどうかを取得
+  //豌ｴ縺悟�･縺｣縺ｦ縺�繧九°縺ｩ縺�縺九ｒ蜿門ｾ�
   //I2C
 }
 
 static float    HydroCtlClass::getTemp(){
-  //気温を取得
+  //豌玲ｸｩ繧貞叙蠕�
   //I2C
 }
 static float    HydroCtlClass::getHum(){
-  //湿度を取得
+  //貉ｿ蠎ｦ繧貞叙蠕�
   //I2C
 }
 static float    HydroCtlClass::getIll(){
-  //照度を取得
+  //辣ｧ蠎ｦ繧貞叙蠕�
   return analogRead(pin_ill);
 }
 
 bool     HydroCtlClass::isFull(void){
-  //水量はOKであることを伝える
+  //豌ｴ驥上�ｯOK縺ｧ縺ゅｋ縺薙→繧剃ｼ昴∴繧�
 }
 
 bool     HydroCtlClass::isEmpty(void){
-  //水量が0であることを伝える
+  //豌ｴ驥上′0縺ｧ縺ゅｋ縺薙→繧剃ｼ昴∴繧�
 }
 
 static void     HydroCtlClass::update(void){
-  //現在の状態を更新する
+  //迴ｾ蝨ｨ縺ｮ迥ｶ諷九ｒ譖ｴ譁ｰ縺吶ｋ
   
 }
+
 

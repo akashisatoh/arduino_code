@@ -1,4 +1,4 @@
-//ポンプをオンする関数、電磁弁を動かす関数、EC値、水量などをシールドのセンサー値を読み取るライブラリ！
+//繝昴Φ繝励ｒ繧ｪ繝ｳ縺吶ｋ髢｢謨ｰ縲�髮ｻ逎∝ｼ√ｒ蜍輔°縺咎未謨ｰ縲・C蛟､縲∵ｰｴ驥上↑縺ｩ繧偵す繝ｼ繝ｫ繝峨�ｮ繧ｻ繝ｳ繧ｵ繝ｼ蛟､繧定ｪｭ縺ｿ蜿悶ｋ繝ｩ繧､繝悶Λ繝ｪ�ｼ�
 #ifndef HYDROCTL_H_
 #define HYDROCTL_H_
 
@@ -9,7 +9,7 @@ class HydroCtlClass{
 	private:
    uint32_t   freq;
    float      waterTemp;
-   int        waterLevel; //0or1 入っているか入っていないか
+   int        waterLevel; //0or1 蜈･縺｣縺ｦ縺�繧九°蜈･縺｣縺ｦ縺�縺ｪ縺�縺�
    int        pin_pump1;
    int        pin_pump2;
    int        pin_solenoid;
@@ -46,3 +46,4 @@ class HydroCtlClass{
 extern HydroCtlClass HydroCtl;
 
 #endif
+
