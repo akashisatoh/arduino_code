@@ -15,7 +15,7 @@ HydroCtlClass ctl = HydroCtlClass(pin_pump1, pin_pump2, pin_solenoid, pin_temp, 
 
 void setup() {
   // put your setup code here, to run once:
-  //master  縺ｨ縺励※I2C
+  //master  ※I2C
   Wire.begin();
   Serial.begin(9600);
   while(!Serial);
@@ -43,6 +43,7 @@ void loop() {
   uint32_t ec;
   ec = ctl.getEcValue(receive_data);
   Serial.write("ec:");
+  Serial.println(ec);
   String str = String(ec, BIN);
   Serial.println(str);
   
