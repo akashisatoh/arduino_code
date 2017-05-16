@@ -8,9 +8,10 @@
 #define pin_solenoid 5
 #define pin_temp 0 
 #define pin_hum 1
+#define pin_ill 24
 
 int receive_data[9];
-HydroCtlClass ctl = HydroCtlClass(pin_pump1, pin_pump2, pin_solenoid, pin_temp, pin_hum);
+HydroCtlClass ctl = HydroCtlClass(pin_pump1, pin_pump2, pin_solenoid, pin_temp, pin_hum, pin_ill);
 
 void setup() {
   // put your setup code here, to run once:
@@ -63,25 +64,36 @@ void loop() {
       Serial.write("\n");
       break;
     case '5':
-      ctl.turnOnSolenoid((int)pin_solenoid);
+      ctl.turnOnSolenoid();
       Serial.write("ctl.turn on solenoid");
       Serial.write("\n");
       break;
     case '6':
-      ctl.turnOffSolenoid((int)pin_solenoid);
+      ctl.turnOffSolenoid();
       Serial.write("ctl.turn off solenoid");
       Serial.write("\n"); 
       break;
     case '7':
-      ctl.getTemp((int)pin_temp);
+      //I2C
+      float temp;
+      temp = ctl.getTemp();
       Serial.write("get temp");
       Serial.write("\n");
       break;
     case '8':
-      ctl.getHum((int)pin_hum);
-      Serial.write("get hum");
+      //I2C
+      float hum;
+      hum = ctl.getHum();
+      Serial.write("get hum:");
+      Serial.write(hum);
       Serial.write("\n");
       break;
+    case '9':
+      float ill;
+      ill = ctl.getIll();
+      Serial.write("get ill:");
+      Serial.write(ill);
+      Serial.write("\n");
     default:
       Serial.write(inputchar);
       Serial.write("\n");
