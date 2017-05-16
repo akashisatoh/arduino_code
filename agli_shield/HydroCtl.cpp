@@ -3,7 +3,7 @@
 #include <Wire.h>
 
 
-HydroCtlClass::HydroCtlClass(int pump1, int pump2, int sole, int temp, int hum){
+HydroCtlClass::HydroCtlClass(int pump1, int pump2, int sole, int temp, int hum, int ill){
     freq = 0;
     waterTemp = 0;
     waterLevel = 0;
@@ -12,11 +12,10 @@ HydroCtlClass::HydroCtlClass(int pump1, int pump2, int sole, int temp, int hum){
     pin_solenoid = sole;
     pin_temp = temp;
     pin_hum = hum;
+    pin_ill = ill;
     pinMode(pin_pump1, OUTPUT);
     pinMode(pin_pump2, OUTPUT);
     pinMode(pin_solenoid, OUTPUT);
-    analogRead(pin_temp);
-    analogRead(pin_hum);
 }
 
 static void     HydroCtlClass::begin(void){
@@ -31,44 +30,54 @@ static int8_t   HydroCtlClass::turnOffPump(int  pumpId){
   //ポンプを止める命令
   digitalWrite(pumpId, LOW);
 }
-static int8_t   HydroCtlClass::turnOnSolenoid(int solenoidId){
+static int8_t   HydroCtlClass::turnOnSolenoid(){
   //電磁弁
-  digitalWrite(solenoidId, HIGH);
+  digitalWrite(pin_solenoid, HIGH);
 }
-static int8_t   HydroCtlClass::turnOffSolenoid(int solenoidId){
+static int8_t   HydroCtlClass::turnOffSolenoid(){
   //電磁弁
-  digitalWrite(solenoidId, LOW);
+  digitalWrite(pin_solenoid, LOW);
 }
 
 static uint32_t HydroCtlClass::getEcValue(){
   //EC値を取得
-  
+  //I2C
 }
 
 static float    HydroCtlClass::getWaterTemp(){
-  //waterTemp = data >> 40;
-  //waterTemp = data & 0xFFFFFFFF;
-  //return waterTemp;
-}
-static float    HydroCtlClass::getTemp(int tempId){
-  //気温を取得
-}
-static float    HydroCtlClass::getHum(int humId){
-  //光量を取得
+  //水温を取得
+  //I2C
 }
 
-static bool     HydroCtlClass::isEmpty(void){
-  //水量が無いことを伝える
+void HydroCtlClass::getSensorValues(){
+  //孫（製品版では子）基盤かI2C通信してデータを取得
+  //その後値をそれぞれ取得する
 }
-static bool     HydroCtlClass::isFull(void){
+
+int HydroCtlClass::waterEmpty(){
+  //水が入っているかどうかを取得
+  //I2C
+}
+
+static float    HydroCtlClass::getTemp(){
+  //気温を取得
+  //I2C
+}
+static float    HydroCtlClass::getHum(){
+  //湿度を取得
+  //I2C
+}
+static float    HydroCtlClass::getIll(){
+  //照度を取得
+  return analogRead(pin_ill);
+}
+
+bool     HydroCtlClass::isEmpty(void){
   //水量はOKであることを伝える
 }
 
 static void     HydroCtlClass::update(void){
   //現在の状態を更新する
-  float temp;
-  //temp= getTemp(pin_temp);
-  //this.freq = getEcValue();
   
 }
 
