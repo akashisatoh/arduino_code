@@ -47,6 +47,7 @@ void loop() {
   String str = String(ec, BIN);
   Serial.println(str);
   
+  /*
   uint8_t inputchar;
   while((inputchar = Serial.read()) == 255){
     
@@ -118,6 +119,7 @@ void loop() {
       Serial.write(inputchar);
       Serial.write("\n");
   }
+  */
   
   delay(500);
   

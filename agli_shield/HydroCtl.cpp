@@ -37,13 +37,11 @@ static int8_t   HydroCtlClass::turnOnSolenoid(){
 
  uint32_t HydroCtlClass::getEcValue(uint8_t data[]){
   //I2C
-
-
   uint32_t ecValue;
   ecValue = data[4];
-  ecValue = (ecValue << 8) | data[5];
-  ecValue = (ecValue << 16) | data[6];
-  ecValue = (ecValue << 24) | data[7];
+  ecValue = (data[5] << 8) | ecValue;
+  ecValue = (data[6] << 16) | ecValue;
+  ecValue = (data[7] << 24) | ecValue;
   
   return ecValue;
 }
