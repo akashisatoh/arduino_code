@@ -39,9 +39,9 @@ static int8_t   HydroCtlClass::turnOnSolenoid(){
   //I2C
   uint32_t ecValue;
   ecValue = data[4];
-  ecValue = (ecValue << 8) | data[5];
-  ecValue = (ecValue << 16) | data[6];
-  ecValue = (ecValue << 24) | data[7];
+  ecValue = (ecValue) | data[5]<< 8;
+  ecValue = (ecValue) | data[6]<< 16;
+  ecValue = (ecValue) | data[7]<< 24;
   
   return ecValue;
 }
@@ -50,9 +50,9 @@ static int8_t   HydroCtlClass::turnOnSolenoid(){
   //I2C
   uint32_t tempValue;
   tempValue = data[0];
-  tempValue = (tempValue << 8) | data[1];
-  tempValue = (tempValue << 16) | data[2];
-  tempValue = (tempValue << 24) | data[3];
+  tempValue = (tempValue) | data[1]<<8;
+  tempValue = (tempValue) | data[2]<<16;
+  tempValue = (tempValue) | data[3]<<24;
 }
 
 void HydroCtlClass::getSensorValues(uint8_t data[]){
@@ -73,17 +73,29 @@ static float    HydroCtlClass::getIll(){
 }
 
 bool     HydroCtlClass::isFull(uint8_t data[]){
+  //水位が上の方まで荒ればtrueを返す
   uint8_t height;
   height = data[8];
+  if(data[8] & 0b00000010 == 0b00000010){
+    return true;
+  }else{
+    return false;
+  }
   
 }
 
 bool     HydroCtlClass::isEmpty(uint8_t data[]){
-  
+  //水位が下の方を下回っていたらtrueを返す
+  uint8_t height;
+  height = data[8];
+  if(data[8] & 0b00000001 == 0b00000001){
+    return false;
+  }else{
+    return true;
+  }
 }
 
 static void     HydroCtlClass::update(void){
-  //
   
 }
 
