@@ -114,6 +114,13 @@ void loop() {
       Serial.write("get ill:");
       Serial.write(ill);
       Serial.write("\n");
+      break;
+    case 'a' :
+      bool height;
+      //height = ctl.isFull();
+      Serial.write("water is empty?:");
+      Serial.write("");
+      break;
     default:
       Serial.write(inputchar);
       Serial.write("\n");

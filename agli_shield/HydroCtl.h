@@ -38,8 +38,8 @@ class HydroCtlClass{
     float    getHum();
     float    getIll();
 
-    bool     isFull(void);
-    bool     isEmpty(void);
+    bool     isFull(uint8_t[]);
+    bool     isEmpty(uint8_t[]);
 };
 
 extern HydroCtlClass HydroCtl;

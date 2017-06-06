@@ -37,8 +37,6 @@ static int8_t   HydroCtlClass::turnOnSolenoid(){
 
  uint32_t HydroCtlClass::getEcValue(uint8_t data[]){
   //I2C
-
-
   uint32_t ecValue;
   ecValue = data[4];
   ecValue = (ecValue << 8) | data[5];
@@ -50,6 +48,11 @@ static int8_t   HydroCtlClass::turnOnSolenoid(){
 
  float    HydroCtlClass::getWaterTemp(uint8_t data[]){
   //I2C
+  uint32_t tempValue;
+  tempValue = data[0];
+  tempValue = (tempValue << 8) | data[1];
+  tempValue = (tempValue << 16) | data[2];
+  tempValue = (tempValue << 24) | data[3];
 }
 
 void HydroCtlClass::getSensorValues(uint8_t data[]){
@@ -69,10 +72,13 @@ static float    HydroCtlClass::getIll(){
   return analogRead(pin_ill);
 }
 
-bool     HydroCtlClass::isFull(void){
+bool     HydroCtlClass::isFull(uint8_t data[]){
+  uint8_t height;
+  height = data[8];
+  
 }
 
-bool     HydroCtlClass::isEmpty(void){
+bool     HydroCtlClass::isEmpty(uint8_t data[]){
   
 }
 
