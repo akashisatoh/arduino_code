@@ -63,14 +63,14 @@ static int mloop(struct pt *pt){
     }
 
     //ポンプ回す
-    Serial1.print("turn on pump1 ");
-    Serial1.println(pumpOnTime);
-    Serial1.println(analogRead(pin_currentPump1));
+    Serial.print("turn on pump1 ");
+    Serial.println(pumpOnTime);
+    Serial.println(analogRead(pin_currentPump1));
     PT_WAIT(pt, &timestamp ,pumpOnTime*10);//待つ
     //ポンプ止める
-    Serial1.print("turn off pump1 ");
-    Serial1.println(pumpOffTime);
-    Serial1.println(analogRead(pin_currentPump1));
+    Serial.print("turn off pump1 ");
+    Serial.println(pumpOffTime);
+    Serial.println(analogRead(pin_currentPump1));
     PT_WAIT(pt, &timestamp, pumpOffTime*10);//待つ
   }
 
@@ -86,17 +86,17 @@ static int iloop(struct pt *pt) {
     while(true) {
         // input
         PT_WAIT(pt, &timestamp, 1000);
-        Serial1.println("input");
+        Serial.println("input");
         char inputchar;
         // 受信したデータが存在する
         int i=0;
-        while(Serial1.available()>0){
-          inputchar = Serial1.read();    //文字の読み込み」
+        while(Serial.available()>0){
+          inputchar = Serial.read();    //文字の読み込み」
           if (inputchar == '.' || inputchar == '¥n') {       //「/」が読み込まれたなら文字列の最後とみなし
             inputchar = '\0';           //終端文字（「Null」と同様）を挿入
             command.concat(inputchar);
-            Serial1.print(command);       //シリアルに文字列を書込
-            Serial1.write("\n");     //改行コードを書込
+            Serial.print(command);       //シリアルに文字列を書込
+            Serial.write("\n");     //改行コードを書込
             i=0;                    //カウントを戻す
             
           }else { 
@@ -114,7 +114,7 @@ static int iloop(struct pt *pt) {
           Wire.requestFrom(8, 9);
           while(Wire.available()){
             receive_data[index] = Wire.read();
-            Serial1.println(receive_data[index]);
+            Serial.println(receive_data[index]);
             index++;
             if(index > 9)
               break;
@@ -122,105 +122,105 @@ static int iloop(struct pt *pt) {
     
           //水温を取得
           waterTemp = ctl.getWaterTemp(receive_data);
-          Serial1.write("waterTemp:");
-          Serial1.println(waterTemp);
+          Serial.write("waterTemp:");
+          Serial.println(waterTemp);
           str = String(waterTemp, BIN);
-          Serial1.println(str);
+          Serial.println(str);
     
           //EC値を取得
           ec = ctl.getEcValue(receive_data);
-          Serial1.write("ec:");
-          Serial1.println(ec);
+          Serial.write("ec:");
+          Serial.println(ec);
           str = String(ec, BIN);
-          Serial1.println(str);
+          Serial.println(str);
     
           //水位を取得
-          Serial1.write("water is full?:");
+          Serial.write("water is full?:");
           if(ctl.isFull(receive_data)){
-            Serial1.write("full");
+            Serial.write("full");
           }else{
-            Serial1.write("not full");
+            Serial.write("not full");
           }
-          Serial1.write("water is empty?:");
+          Serial.write("water is empty?:");
           if(ctl.isEmpty(receive_data)){
-            Serial1.write("empty!");
+            Serial.write("empty!");
           }else{
-            Serial1.write("not empty!");
+            Serial.write("not empty!");
           }
-          //Serial1.write("update");
+          //Serial.write("update");
           break;
         }else if(command.equals("quit")){
           //exit
         }else if(command.equals("pump1on")){
           //pump on
           ctl.turnOnPump((int)pin_pump1);
-          Serial1.write("ctl.turn on pump1");
-          Serial1.write("\n");
+          Serial.write("ctl.turn on pump1");
+          Serial.write("\n");
         }else if(command.equals("pump2on")){
           ctl.turnOnPump((int)pin_pump2);
-          Serial1.write("ctl.turn on pump2");
-          Serial1.write("\n");
+          Serial.write("ctl.turn on pump2");
+          Serial.write("\n");
         }else if(command.equals("pump1off")){
           ctl.turnOffPump((int)pin_pump1);
-          Serial1.write("ctl.turn off pump1");
-          Serial1.write("\n");
+          Serial.write("ctl.turn off pump1");
+          Serial.write("\n");
         }else if(command.equals("pump2off")){
           ctl.turnOffPump((int)pin_pump2);
-          Serial1.write("ctl.turn off pump2");
-          Serial1.write("\n");
+          Serial.write("ctl.turn off pump2");
+          Serial.write("\n");
         }else if(command.equals("solenoidon")){
           ctl.turnOnSolenoid();
-          Serial1.write("ctl.turn on solenoid");
-          Serial1.write("\n");
+          Serial.write("ctl.turn on solenoid");
+          Serial.write("\n");
         }else if(command.equals("solenoidoff")){
           ctl.turnOffSolenoid();
-          Serial1.write("ctl.turn off solenoid");
-          Serial1.write("\n"); 
+          Serial.write("ctl.turn off solenoid");
+          Serial.write("\n"); 
         }else if( command.equals("gettemp")){
           float temp;
           temp = ctl.getTemp();
-          Serial1.write("get temp");
-          Serial1.write("\n");
+          Serial.write("get temp");
+          Serial.write("\n");
         }else if(command.equals("gethum")){
           float hum;
           hum = ctl.getHum();
-          Serial1.write("get hum:");
-          //Serial1.write(hum);
-          Serial1.write("\n");
+          Serial.write("get hum:");
+          //Serial.write(hum);
+          Serial.write("\n");
         }else if(command.equals("getill")){
           float ill;
           ill = ctl.getIll();
-          Serial1.write("get ill:");
-          //Serial1.write(ill);
-          Serial1.write("\n");
+          Serial.write("get ill:");
+          //Serial.write(ill);
+          Serial.write("\n");
         }else if(command.equals("isfull")){
-          Serial1.write("water is full?:");
+          Serial.write("water is full?:");
           if(ctl.isFull(receive_data)){
-            Serial1.write("full");
+            Serial.write("full");
           }else{
-            Serial1.write("not full");
+            Serial.write("not full");
           }
         }else if(command.equals("isempty")){
-          Serial1.write("water is empty?:");
+          Serial.write("water is empty?:");
           if(ctl.isEmpty(receive_data)){
-            Serial1.write("empty!");
+            Serial.write("empty!");
           }else{
-            Serial1.write("not empty!");
+            Serial.write("not empty!");
           }
         }else if(command.equals("getwatertemp")){
           //水温を取得
           waterTemp = ctl.getWaterTemp(receive_data);
-          Serial1.write("waterTemp:");
-          Serial1.println(waterTemp);
+          Serial.write("waterTemp:");
+          Serial.println(waterTemp);
           str = String(waterTemp, BIN);
-          Serial1.println(str);
+          Serial.println(str);
         }else if(command.equals("getwaterec")){
           //EC値を取得
           ec = ctl.getEcValue(receive_data);
-          Serial1.write("ec:");
-          Serial1.println(ec);
+          Serial.write("ec:");
+          Serial.println(ec);
           str = String(ec, BIN);
-          Serial1.println(str);
+          Serial.println(str);
         }
         command = "";
     }
@@ -248,6 +248,7 @@ void setup() {
   //pt初期化
   PT_INIT(&mainloop);
   PT_INIT(&inputloop);
+  //SoftwareSerial Serial(0,1);
   Serial.begin(9600);
   while(!Serial);
   Serial.print("start");
