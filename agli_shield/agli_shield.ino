@@ -4,8 +4,8 @@
 #include <pt.h>
 
 
-#define pin_pump1 6
-#define pin_pump2 7
+#define pin_pump1 5
+#define pin_pump2 6
 #define pin_solenoid 5
 #define pin_temp 0 
 #define pin_hum 1
@@ -66,11 +66,13 @@ static int mloop(struct pt *pt){
     Serial.print("turn on pump1 ");
     Serial.println(pumpOnTime);
     Serial.println(analogRead(pin_currentPump1));
+    ctl.turnOnPump((int)pin_pump1);
     PT_WAIT(pt, &timestamp ,pumpOnTime*10);//待つ
     //ポンプ止める
     Serial.print("turn off pump1 ");
     Serial.println(pumpOffTime);
     Serial.println(analogRead(pin_currentPump1));
+    ctl.turnOffPump((int)pin_pump1);
     PT_WAIT(pt, &timestamp, pumpOffTime*10);//待つ
   }
 
