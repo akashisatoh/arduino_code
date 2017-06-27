@@ -84,7 +84,7 @@ void setFreq() {
 
   // 周波数はret.reg[4-7]に格納(4byte)
   //ret.freq[1] = FreqCount.read();
-  ret.freq[1] = 1000;
+  ret.freq[1] = 2003;
   ret.freq[1] = ret.freq[1] | 0;
 
   // 発振終了
