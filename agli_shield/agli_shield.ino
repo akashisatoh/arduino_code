@@ -48,16 +48,16 @@ static int mloop(struct pt *pt){
     int current1, current2; //ポンプ1，ポンプ2に流れる電流
 
     //ポンプの時間を見る
-    if(digitalRead(pin_mode1) == LOW && digitalRead(pin_mode2) == LOW){
+    if(digitalRead(pin_mode1) == HIGH && digitalRead(pin_mode2) == HIGH){
       pumpOnTime = 15;
       pumpOffTime = 585;
-    }else if(digitalRead(pin_mode1) == HIGH && digitalRead(pin_mode2) == LOW){
+    }else if(digitalRead(pin_mode1) == LOW && digitalRead(pin_mode2) == HIGH){
       pumpOnTime = 60;
       pumpOffTime = 540;
-    }else if(digitalRead(pin_mode1) == LOW && digitalRead(pin_mode2) == HIGH){
+    }else if(digitalRead(pin_mode1) == HIGH && digitalRead(pin_mode2) == LOW){
       pumpOnTime = 360;
       pumpOffTime = 240;
-    }else if(digitalRead(pin_mode1) == HIGH && digitalRead(pin_mode2) == HIGH){
+    }else if(digitalRead(pin_mode1) == LOW && digitalRead(pin_mode2) == LOW){
       pumpOnTime = 600;
       pumpOffTime = 0;
     }
@@ -196,6 +196,7 @@ static int iloop(struct pt *pt) {
           //Serial.write(ill);
           Serial.write("\n");
         }else if(command.equals("isfull")){
+          Serial.println(receive_data[8]);
           Serial.write("water is full?:");
           if(ctl.isFull(receive_data)){
             Serial.write("full");
@@ -203,6 +204,7 @@ static int iloop(struct pt *pt) {
             Serial.write("not full");
           }
         }else if(command.equals("isempty")){
+          Serial.println(receive_data[8]);
           Serial.write("water is empty?:");
           if(ctl.isEmpty(receive_data)){
             Serial.write("empty!");
@@ -245,7 +247,6 @@ void setup() {
   pinMode(pin_temp, INPUT);
   pinMode(pin_hum, INPUT);
   pinMode(pin_ill, INPUT);
-  
 
   //pt初期化
   PT_INIT(&mainloop);

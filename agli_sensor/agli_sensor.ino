@@ -4,7 +4,7 @@
 #define WL_H  7
 #define WL_L  8
 #define WTMP  A0
-#define EC_SW 9
+#define EC_SW 5
 #define WL_SW 10
 #define VAREF 2.5*32/(32+4.7)
 
@@ -104,11 +104,19 @@ void setWlevel() {
   delay(5);
 
   // 水位状態の取得(2値)
-  uint8_t valH = digitalRead(WL_H);
-  uint8_t valL = digitalRead(WL_L);
+  uint8_t valH = 0b00000000;
+  uint8_t valL = 0b00000000;
+  if(digitalRead(WL_H)==HIGH){
+    valH = 0b00000010;
+  }
+  if(digitalRead(WL_L)==HIGH){
+    valL = 0b00000001;
+  }
+  //uint8_t valH = digitalRead(WL_H);
+  //uint8_t valL = digitalRead(WL_L);
 
   // 下位2bitに状態を格納
-  ret.reg[8] = valH << 1 | valL;
+  ret.reg[8] = valH | valL;
 
   // 発振終了
   digitalWrite(WL_SW, LOW);
