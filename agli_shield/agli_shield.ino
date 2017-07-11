@@ -225,6 +225,9 @@ static int iloop(struct pt *pt) {
           Serial.println(ec);
           str = String(ec, BIN);
           Serial.println(str);
+        }else if(command.equals("test")){
+          //直流テスト
+          Serial.println(digitalRead(8));
         }
         command = "";
     }
@@ -241,6 +244,7 @@ void setup() {
   pinMode(pin_pump1, OUTPUT);
   pinMode(pin_pump2, OUTPUT);
   pinMode(pin_solenoid, OUTPUT);
+  pinMode(8, INPUT);
 
   pinMode(pin_mode1, INPUT);
   pinMode(pin_mode2, INPUT);
