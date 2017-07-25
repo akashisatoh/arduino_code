@@ -18,24 +18,24 @@ HydroCtlClass::HydroCtlClass(int pump1, int pump2, int sole, int temp, int hum, 
     pinMode(pin_solenoid, OUTPUT);
 }
 
-static void     HydroCtlClass::begin(void){
+void     HydroCtlClass::begin(void){
   
 }
 
-static int8_t   HydroCtlClass::turnOnPump(int  pumpId){
+int8_t   HydroCtlClass::turnOnPump(int  pumpId){
   digitalWrite(pumpId, HIGH);
 }
-static int8_t   HydroCtlClass::turnOffPump(int  pumpId){
+int8_t   HydroCtlClass::turnOffPump(int  pumpId){
   digitalWrite(pumpId, LOW);
 }
-static int8_t   HydroCtlClass::turnOnSolenoid(){
+int8_t   HydroCtlClass::turnOnSolenoid(){
   digitalWrite(pin_solenoid, HIGH);
 }
- int8_t   HydroCtlClass::turnOffSolenoid(){
+int8_t   HydroCtlClass::turnOffSolenoid(){
   digitalWrite(pin_solenoid, LOW);
 }
 
- uint32_t HydroCtlClass::getEcValue(uint8_t data[]){
+uint32_t HydroCtlClass::getEcValue(uint8_t data[]){
   //I2C
   uint32_t ecValue;
   ecValue = data[4];
@@ -46,7 +46,7 @@ static int8_t   HydroCtlClass::turnOnSolenoid(){
   return ecValue;
 }
 
- float    HydroCtlClass::getWaterTemp(uint8_t data[]){
+float    HydroCtlClass::getWaterTemp(uint8_t data[]){
   //I2C
   uint32_t tempValue;
   tempValue = data[0];
@@ -62,13 +62,13 @@ int HydroCtlClass::waterEmpty(){
   //I2C
 }
 
-static float    HydroCtlClass::getTemp(){
+float    HydroCtlClass::getTemp(){
   //I2C
 }
-static float    HydroCtlClass::getHum(){
+float    HydroCtlClass::getHum(){
   //I2C
 }
-static float    HydroCtlClass::getIll(){
+float    HydroCtlClass::getIll(){
   return analogRead(pin_ill);
 }
 
@@ -95,7 +95,7 @@ bool     HydroCtlClass::isEmpty(uint8_t data[]){
   }
 }
 
-static void     HydroCtlClass::update(void){
+void     HydroCtlClass::update(void){
   
 }
 

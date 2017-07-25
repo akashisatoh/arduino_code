@@ -15,71 +15,7 @@
 #define pin_currentPump1 2
 #define pin_currentPump2 3
 
-#define PT_WAIT(pt, timestamp, usec) PT_WAIT_UNTIL(pt, millis() - *timestamp > usec);*timestamp = millis();
-
-
-
-
-uint8_t receive_data[9];
-HydroCtlClass ctl = HydroCtlClass(pin_pump1, pin_pump2, pin_solenoid, pin_temp, pin_hum, pin_ill);
-
-uint32_t waterTemp, ec;
-int mode1, mode2; //00:on-15,0ff-585, 01:on-60,0ff-540, 10:0n-360,off-240, 11:on-600,off-0
-int mode, pumpOnTime=15, pumpOffTime=585; //モードに寄って変化
-String str; //取得した結果を表示する用
-String command;
-
-
-
-//時間をカウントするためのもの
-
-static struct pt mainloop, inputloop;
-
-static int mloop(struct pt *pt){
-  //スレッド内の処理
-  //ここをメインループとする
-  static unsigned long timestamp = 0;
-  PT_BEGIN(pt);
-
-  while(true){
-    //メインとなるループ
-    //ポンプとかを回す処理
-
-    int current1, current2; //ポンプ1，ポンプ2に流れる電流
-
-    //ポンプの時間を見る
-    if(digitalRead(pin_mode1) == HIGH && digitalRead(pin_mode2) == HIGH){
-      pumpOnTime = 15;
-      pumpOffTime = 585;
-    }else if(digitalRead(pin_mode1) == LOW && digitalRead(pin_mode2) == HIGH){
-      pumpOnTime = 60;
-      pumpOffTime = 540;
-    }else if(digitalRead(pin_mode1) == HIGH && digitalRead(pin_mode2) == LOW){
-      pumpOnTime = 360;
-      pumpOffTime = 240;
-    }else if(digitalRead(pin_mode1) == LOW && digitalRead(pin_mode2) == LOW){
-      pumpOnTime = 600;
-      pumpOffTime = 0;
-    }
-
-    //ポンプ回す
-    Serial.print("turn on pump1 ");
-    Serial.println(pumpOnTime);
-    Serial.println(analogRead(pin_currentPump1));
-    ctl.turnOnPump((int)pin_pump1);
-    PT_WAIT(pt, &timestamp ,pumpOnTime*10);//待つ
-    //ポンプ止める
-    Serial.print("turn off pump1 ");
-    Serial.println(pumpOffTime);
-    Serial.println(analogRead(pin_currentPump1));
-    ctl.turnOffPump((int)pin_pump1);
-    PT_WAIT(pt, &timestamp, pumpOffTime*10);//待つ
-  }
-
-  PT_END(pt);
-}
-
-
+/*
 static int iloop(struct pt *pt) {
     // スレッド内で基準となるタイムスタンプ
     static unsigned long timestamp = 0;
@@ -231,6 +167,19 @@ static int iloop(struct pt *pt) {
     PT_END(pt);
 }
 
+*/
+
+unsigned long pumpOnTime=0, pumpOffTime=0;
+unsigned long pumpTime = 0; //ポンプがオン，オフになり始めた時間を記録
+boolean runningPump = false;
+uint32_t waterTemp, ec;
+int mode1, mode2; //00:on-15,0ff-585, 01:on-60,0ff-540, 10:0n-360,off-240, 11:on-600,off-0
+String str; //取得した結果を表示する用
+String command;
+int current1, current2; //ポンプ1，ポンプ2に流れる電流
+uint8_t receive_data[9];
+HydroCtlClass ctl = HydroCtlClass(pin_pump1, pin_pump2, pin_solenoid, pin_temp, pin_hum, pin_ill);
+
 
 
 void setup() {
@@ -248,20 +197,101 @@ void setup() {
   pinMode(pin_hum, INPUT);
   pinMode(pin_ill, INPUT);
 
+  /*
   //pt初期化
   PT_INIT(&mainloop);
   PT_INIT(&inputloop);
   //SoftwareSerial Serial(0,1);
+  */
   Serial.begin(9600);
   while(!Serial);
   Serial.print("start");
+
+  //ポンプの動作時間を調べる
+  if(digitalRead(pin_mode1) == HIGH && digitalRead(pin_mode2) == HIGH){
+    pumpOnTime = 15;
+    pumpOffTime = 585;
+  }else if(digitalRead(pin_mode1) == LOW && digitalRead(pin_mode2) == HIGH){
+    pumpOnTime = 60;
+    pumpOffTime = 540;
+  }else if(digitalRead(pin_mode1) == HIGH && digitalRead(pin_mode2) == LOW){
+    pumpOnTime = 360;
+    pumpOffTime = 240;
+  }else if(digitalRead(pin_mode1) == LOW && digitalRead(pin_mode2) == LOW){
+    pumpOnTime = 600;
+    pumpOffTime = 0;
+  }
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  mloop(&mainloop);
-  iloop(&inputloop);
+  //mloop(&mainloop);
+  //iloop(&inputloop);
+
+  static unsigned long timestamp = 0;
+  //メインとなるループ
+  //ポンプとかを回す処理  
+  //ポンプの動作時間を見る
+  if(digitalRead(pin_mode1) == HIGH && digitalRead(pin_mode2) == HIGH){
+    pumpOnTime = 15;
+    pumpOffTime = 585;
+  }else if(digitalRead(pin_mode1) == LOW && digitalRead(pin_mode2) == HIGH){
+    pumpOnTime = 60;
+    pumpOffTime = 540;
+  }else if(digitalRead(pin_mode1) == HIGH && digitalRead(pin_mode2) == LOW){
+    pumpOnTime = 360;
+    pumpOffTime = 240;
+  }else if(digitalRead(pin_mode1) == LOW && digitalRead(pin_mode2) == LOW){
+    pumpOnTime = 600;
+    pumpOffTime = 100;
+  }
+
+  //ポンプをおんしたり，オフしたり
+  if(pumpTime == 0){
+    //ポンプ回す
+    Serial.print("turn on pump1 ");
+    Serial.println(pumpOnTime);
+    Serial.println(analogRead(pin_currentPump1));
+    ctl.turnOnPump((int)pin_pump1);
+    pumpTime = millis();
+    runningPump = true;
+  }else{
+    if(runningPump){
+      //ポンプが動いていたら
+      //指定した時間動かしていなければ継続して動かし，
+      //指定した時間以上動かしていればポンプを止める
+      if((millis() - pumpTime) < pumpOnTime*10){
+        //そのまま動かす
+      }else{
+        //ポンプ止める
+        Serial.print("turn off pump1 ");
+        Serial.println(pumpOffTime);
+        Serial.println(analogRead(pin_currentPump1));
+        ctl.turnOffPump((int)pin_pump1);
+        pumpTime = millis();
+        runningPump = false;
+      }
+    }else{
+      //ポンプが動いていなかったら
+      //指定した時間より止めていなければそのまま止めておき，
+      //指定した時間以上止めていたらポンプを動かし始める
+      if((millis() - pumpTime) < pumpOffTime*10){
+        //そのまま止めておく
+      }else{
+        //ポンプ動かす
+        Serial.print("turn on pump1 ");
+        Serial.println(pumpOnTime);
+        Serial.println(analogRead(pin_currentPump1));
+        ctl.turnOnPump((int)pin_pump1);
+        pumpTime = millis();
+        runningPump = true;
+      }
+    }
+  }
+
 }
+
+
 
 
 
