@@ -14,6 +14,7 @@
 #define pin_mode2 2
 #define pin_currentPump1 2
 #define pin_currentPump2 3
+#define pin_currentSolenoid 0
 
 
 
@@ -65,7 +66,7 @@ void setup() {
     pumpOffTime = 240;
   }else if(digitalRead(pin_mode1) == LOW && digitalRead(pin_mode2) == LOW){
     pumpOnTime = 600;
-    pumpOffTime = 0;
+    pumpOffTime = 100;
   }
 }
 
@@ -234,6 +235,7 @@ static int getInput() {
       ctl.turnOnSolenoid();
       Serial.write("ctl.turn on solenoid");
       Serial.write("\n");
+      Serial.println(analogRead(pin_currentSolenoid));
     }else if(command.equals("solenoidoff")){
       ctl.turnOffSolenoid();
       Serial.write("ctl.turn off solenoid");

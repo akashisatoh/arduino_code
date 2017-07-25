@@ -81,7 +81,6 @@ bool     HydroCtlClass::isFull(uint8_t data[]){
   }else{
     return false;
   }
-  
 }
 
 bool     HydroCtlClass::isEmpty(uint8_t data[]){
