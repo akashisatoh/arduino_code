@@ -22,9 +22,9 @@ unsigned long pumpTime = 0; //ポンプがオン，オフになり始めた時�
 unsigned long sensorTime = 0;
 boolean runningPump = false;
 uint32_t waterTemp, ec;
-int mode1, mode2; //00:on-15,0ff-585, 01:on-60,0ff-540, 10:0n-360,off-240, 11:on-600,off-0
+int mode1, mode2, index; //00:on-15,0ff-585, 01:on-60,0ff-540, 10:0n-360,off-240, 11:on-600,off-0
 String str; //取得した結果を表示する用
-String command;
+String command, arg1, arg2, inputString;
 int current1, current2; //ポンプ1，ポンプ2に流れる電流
 uint8_t receive_data[9];
 HydroCtlClass ctl = HydroCtlClass(pin_pump1, pin_pump2, pin_solenoid, pin_temp, pin_hum, pin_ill);
@@ -46,7 +46,7 @@ void setup() {
   pinMode(pin_hum, INPUT);
   pinMode(pin_ill, INPUT);
 
-  MsTimer2::set(5000, getInput); //入力を受け取る関数をたまに実行
+  MsTimer2::set(1000, getInput); //入力を受け取る関数をたまに実行
   
   Serial.begin(9600);
   while(!Serial);
@@ -90,6 +90,12 @@ void loop() {
   }else if(digitalRead(pin_mode1) == LOW && digitalRead(pin_mode2) == LOW){
     pumpOnTime = 600;
     pumpOffTime = 100;
+  }
+
+  if((millis() - pumpTime) < 0){
+    //50日でリセットされるリセットされたらポンプの状態，開始時間もリセット
+    runningPump = false;
+    pumpTime = 0;    
   }
 
   //ポンプをおんしたり，オフしたり
@@ -142,8 +148,6 @@ void loop() {
     Serial.println("sensing!");
     sensorTime = millis();
   }
-  
-
 }
 
 
@@ -157,19 +161,15 @@ static int getInput() {
     // 受信したデータが存在する
     int i=0;
     while(Serial.available()>0){
-      inputchar = Serial.read();    //文字の読み込み」
-      if (inputchar == '.' || inputchar == '¥n') {       //「/」が読み込まれたなら文字列の最後とみなし
-        inputchar = '\0';           //終端文字（「Null」と同様）を挿入
-        command.concat(inputchar);
-        Serial.print(command);       //シリアルに文字列を書込
-        Serial.write("\n");     //改行コードを書込
-        i=0;                    //カウントを戻す
-        
-      }else { 
-        command.concat(inputchar);
-      } 
+      inputchar = Serial.read();    //文字の読み込み
+      inputString.concat(inputchar);
     }
-  
+    inputString[inputString.length()-2] = '\0';
+    index = split(inputString, ' ');
+    Serial.println(inputString);
+  }
+    
+  if( index == 1){
     if(command.equals("update")){
       //update
       //タンクの情報を更新
@@ -286,9 +286,47 @@ static int getInput() {
       str = String(ec, BIN);
       Serial.println(str);
     }
-  }else{
-    
+  }else if(index == 3){
+    //入力系or取得系
+    if(command.equals("setTimer")){
+      Serial.println("set timerrrrrrrr");
+      pumpOnTime = arg1.toInt();
+      pumpOffTime = arg2.toInt();
+    }else{
+      Serial.println(command);
+      Serial.println(arg1);
+      Serial.println(arg2);
+    }
   }
-  
+  index = 0;
+  inputString = "";
+  command="";
+  arg1 = "";
+  arg2 = "";
+}
+
+int split(String data, char delimiter){
+    int index = 0;
+    int arraySize = (sizeof(data)/sizeof((data)[0]));  
+    int datalength = data.length();
+    for (int i = 0; i < datalength; i++) {
+        char tmp = data.charAt(i);
+        if ( tmp == delimiter ) {
+            index++;
+            if ( index > (arraySize - 1)) return -1;
+        }else{
+          if(index == 0){
+            command.concat(tmp);
+          }else if(index == 1){
+            arg1.concat(tmp);
+          }else{
+            arg2.concat(tmp);
+          }
+        }
+    }
+    command.concat('\0');
+    arg1.concat('\0');
+    arg2[arg2.length()-2] = '\0';
+    return (index + 1);
 }
 
