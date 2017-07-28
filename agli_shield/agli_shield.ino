@@ -355,6 +355,7 @@ void printData(uint8_t receiveData[]){
   for(i=0; i<9; i++){
     //Serial.println(receiveData[i]);
   }
+
 }
 
 void getSensorData(){
