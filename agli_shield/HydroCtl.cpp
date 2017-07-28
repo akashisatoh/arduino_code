@@ -46,13 +46,14 @@ uint32_t HydroCtlClass::getEcValue(uint8_t data[]){
   return ecValue;
 }
 
-float    HydroCtlClass::getWaterTemp(uint8_t data[]){
+uint32_t    HydroCtlClass::getWaterTemp(uint8_t data[]){
   //I2C
   uint32_t tempValue;
   tempValue = data[0];
-  tempValue = (tempValue) | data[1]<<8;
-  tempValue = (tempValue) | data[2]<<16;
-  tempValue = (tempValue) | data[3]<<24;
+  tempValue = (tempValue) | (data[1]>>8);
+  tempValue = (tempValue) | (data[2]>>16);
+  tempValue = (tempValue) | (data[3]>>24);
+  return tempValue;
 }
 
 void HydroCtlClass::getSensorValues(uint8_t data[]){

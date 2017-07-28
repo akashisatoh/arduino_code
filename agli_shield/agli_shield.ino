@@ -47,7 +47,7 @@ void setup() {
   pinMode(pin_hum, INPUT);
   pinMode(pin_ill, INPUT);
 
-  MsTimer2::set(1000, getInput); //入力を受け取る関数をたまに実行
+  MsTimer2::set(3000, getInput); //入力を受け取る関数をたまに実行
   
   Serial.begin(9600);
   while(!Serial);
@@ -142,12 +142,22 @@ void loop() {
     }
   }
 
-  if((millis() - sensorTime) > 10000){
+  if((millis() - sensorTime) > 3000){
     //10秒に一回センシング
     //ここに処理を書く
 
-    Serial.println("sensing!");
+    //Serial.println("sensing!");
+    getInput();
+    //水温を取得
+    getSensorData();
+    waterTemp = ctl.getWaterTemp(receive_data);
+    printData(receive_data);
+    Serial.write("waterTemp:");
+    Serial.println(waterTemp);
+    str = String(waterTemp, BIN);
+    Serial.println(str);
     sensorTime = millis();
+
   }
 }
 
@@ -258,7 +268,9 @@ static int getInput() {
       //Serial.write(ill);
       Serial.write("\n");
     }else if(command.equals("isfull")){
-      Serial.println(receive_data[8]);
+      //Serial.println(receive_data[8]);
+      getSensorData();
+      printData(receive_data);
       Serial.write("water is full?:");
       if(ctl.isFull(receive_data)){
         Serial.write("full");
@@ -266,7 +278,9 @@ static int getInput() {
         Serial.write("not full");
       }
     }else if(command.equals("isempty")){
-      Serial.println(receive_data[8]);
+      //Serial.println(receive_data[8]);
+      getSensorData();
+      printData(receive_data);
       Serial.write("water is empty?:");
       if(ctl.isEmpty(receive_data)){
         Serial.write("empty!");
@@ -275,14 +289,18 @@ static int getInput() {
       }
     }else if(command.equals("getwatertemp")){
       //水温を取得
+      getSensorData();
       waterTemp = ctl.getWaterTemp(receive_data);
+      printData(receive_data);
       Serial.write("waterTemp:");
       Serial.println(waterTemp);
       str = String(waterTemp, BIN);
       Serial.println(str);
     }else if(command.equals("getwaterec")){
       //EC値を取得
+      getSensorData();
       ec = ctl.getEcValue(receive_data);
+      printData(receive_data);
       Serial.write("ec:");
       Serial.println(ec);
       str = String(ec, BIN);
@@ -330,5 +348,24 @@ int split(String data, char delimiter){
     arg1.concat('\0');
     arg2[arg2.length()-2] = '\0';
     return (index + 1);
+}
+
+void printData(uint8_t receiveData[]){
+  int i=0;
+  for(i=0; i<9; i++){
+    //Serial.println(receiveData[i]);
+  }
+}
+
+void getSensorData(){
+  int index = 0;
+      Wire.requestFrom(8, 9);
+      while(Wire.available()){
+        receive_data[index] = Wire.read();
+        Serial.println(receive_data[index]);
+        index++;
+        if(index > 9)
+          break;
+      }
 }
 

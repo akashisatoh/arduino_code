@@ -1,10 +1,9 @@
 #include <FreqCount.h>
-#include <Wire.h>
 
 #define WL_H  7
 #define WL_L  8
 #define WTMP  0
-#define EC_SW 9
+#define EC_SW 5
 #define WL_SW 10
 #define VAREF 2.5*32/(32+4.7)
 
@@ -41,8 +40,8 @@ void setup() {
   FreqCount.begin(1000);
 
   // Slave ID #8 でI2Cに登録
-  Wire.begin(8);
-  Wire.onRequest(requestEvent);
+  //Wire.begin(8);
+  //Wire.onRequest(requestEvent);
 
   //　シリアル通信
   Serial.begin(9600);
@@ -57,9 +56,6 @@ void setup() {
 }
 
 void loop() {
-}
-
-void requestEvent() {
   ret.temp=0;
   ret.freq[1] = 0;
   ret.reg[8] = 0;
@@ -71,10 +67,15 @@ void requestEvent() {
 
   // 水位の取得
   setWlevel();
-
-  // データの送信
-  Wire.write(ret.reg, 9);
+  Serial.print("temp:");
+  Serial.println(ret.temp);
+  Serial.print("freq:");
+  Serial.println(ret.freq[1]);
+  Serial.print("level:");
+  Serial.println(ret.reg[8]);
+  delay(3000);
 }
+
 
 // 周波数を取得して共用体に格納する
 void setFreq() {

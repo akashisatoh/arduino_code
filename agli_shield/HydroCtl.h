@@ -31,7 +31,7 @@ class HydroCtlClass{
     static void     update(void);
     
     uint32_t getEcValue(uint8_t[]);
-    float    getWaterTemp(uint8_t[]);
+    uint32_t    getWaterTemp(uint8_t[]);
     void getSensorValues(uint8_t[]);
     int waterEmpty();
     float    getTemp();
