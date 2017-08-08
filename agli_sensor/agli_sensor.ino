@@ -1,4 +1,5 @@
-#include <FreqCount.h>
+//#include <FreqCount.h>
+#include <FreqCounter.h>
 #include <Wire.h>
 
 #define WL_H  7
@@ -38,7 +39,7 @@ void setup() {
   analogReference(EXTERNAL);
 
   // ゲートタイム1000msで初期化
-  FreqCount.begin(1000);
+  //FreqCount.begin(1000);
 
   // Slave ID #8 でI2Cに登録
   Wire.begin(8);
@@ -81,8 +82,8 @@ void setFreq() {
   // 発振開始
   
   digitalWrite(EC_SW, HIGH);
-  delay(100);
-
+  delay(10);
+  /* FreqCount.h の場合
   // フラグが立つまで待機
   while (!FreqCount.available()) {}
 
@@ -92,6 +93,15 @@ void setFreq() {
   }else if(ret.freq[1] == 0){
     ret.freq[1] = 2000;
   }
+  */
+
+  //*FreqCounter.hの場合*/
+  FreqCounter::f_comp = 8;
+  FreqCounter::start(1000);
+  while(FreqCounter::f_ready = 0);
+
+  ret.freq[1] = FreqCounter::f_freq;
+  
   // 発振終了
   digitalWrite(EC_SW, LOW);
 }
