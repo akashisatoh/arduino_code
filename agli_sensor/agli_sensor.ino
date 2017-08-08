@@ -27,7 +27,7 @@ void requestEvent();
 typedef union {
   uint8_t reg[9];   // reg[8]の下位2bitで水位状態を表現
   uint32_t temp;       // 温度センサの出力電圧
-  uint32_t freq[2]; // freq[1]に周波数カウンタの値を格納
+  unsigned long freq[2]; // freq[1]に周波数カウンタの値を格納
 } _data;
 
 _data ret;
@@ -79,15 +79,19 @@ void requestEvent() {
 // 周波数を取得して共用体に格納する
 void setFreq() {
   // 発振開始
+  
   digitalWrite(EC_SW, HIGH);
-  delay(5);
+  delay(100);
 
   // フラグが立つまで待機
   while (!FreqCount.available()) {}
 
   // 周波数はret.reg[4-7]に格納(4byte)
   ret.freq[1] = FreqCount.read();
-
+  if(ret.freq[1] > 0){
+  }else if(ret.freq[1] == 0){
+    ret.freq[1] = 2000;
+  }
   // 発振終了
   digitalWrite(EC_SW, LOW);
 }
