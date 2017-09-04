@@ -22,7 +22,8 @@ unsigned long pumpOnTime=0, pumpOffTime=0;
 unsigned long pumpTime = 0; //ポンプがオン，オフになり始めた時間を記録
 unsigned long sensorTime = 0;
 boolean runningPump = false;
-uint32_t waterTemp, ec;
+uint32_t waterTemp;
+unsigned long ec;
 int mode1, mode2, index; //00:on-15,0ff-585, 01:on-60,0ff-540, 10:0n-360,off-240, 11:on-600,off-0
 String str; //取得した結果を表示する用
 String command, arg1, arg2, inputString;
@@ -364,7 +365,6 @@ void getSensorData(){
   Serial.println("get sensor data");
   Wire.requestFrom(8, 9);
   while(Wire.available()){
-    //Serial.println("get a data");
     receive_data[index] = Wire.read();
     Serial.println(receive_data[index]);
     index++;

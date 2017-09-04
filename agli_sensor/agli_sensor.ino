@@ -1,5 +1,5 @@
-//#include <FreqCount.h>
-#include <FreqCounter.h>
+//#include <FreqCounter.h>
+#include <FreqCount.h>
 #include <Wire.h>
 
 #define WL_H  7
@@ -28,7 +28,7 @@ void requestEvent();
 typedef union {
   uint8_t reg[9];   // reg[8]の下位2bitで水位状態を表現
   uint32_t temp;       // 温度センサの出力電圧
-  unsigned long freq[2]; // freq[1]に周波数カウンタの値を格納
+  uint32_t freq[2]; // freq[1]に周波数カウンタの値を格納
 } _data;
 
 _data ret;
@@ -39,7 +39,7 @@ void setup() {
   analogReference(EXTERNAL);
 
   // ゲートタイム1000msで初期化
-  //FreqCount.begin(1000);
+  FreqCount.begin(1000);
 
   // Slave ID #8 でI2Cに登録
   Wire.begin(8);
@@ -80,15 +80,18 @@ void requestEvent() {
 // 周波数を取得して共用体に格納する
 void setFreq() {
   // 発振開始
-  
   digitalWrite(EC_SW, HIGH);
   delay(10);
-  /* FreqCount.h の場合
+  
+  //FreqCount.h の場合
   // フラグが立つまで待機
+  
   while (!FreqCount.available()) {}
 
   // 周波数はret.reg[4-7]に格納(4byte)
   ret.freq[1] = FreqCount.read();
+  
+  /*
   if(ret.freq[1] > 0){
   }else if(ret.freq[1] == 0){
     ret.freq[1] = 2000;
@@ -96,14 +99,15 @@ void setFreq() {
   */
 
   //*FreqCounter.hの場合*/
+  /*
   FreqCounter::f_comp = 8;
-  FreqCounter::start(1000);
-  while(FreqCounter::f_ready = 0);
-
+  FreqCounter::start(100);
+  while(FreqCounter::f_ready == 0);
   ret.freq[1] = FreqCounter::f_freq;
+  */
   
   // 発振終了
-  digitalWrite(EC_SW, LOW);
+  //digitalWrite(EC_SW, LOW);
 }
 
 // 水温を取得して共用体に格納する

@@ -37,7 +37,7 @@ int8_t   HydroCtlClass::turnOffSolenoid(){
 
 uint32_t HydroCtlClass::getEcValue(uint8_t data[]){
   //I2C
-  uint32_t ecValue;
+  unsigned long ecValue;
   ecValue = data[4];
   ecValue = (data[5] << 8) | ecValue;
   ecValue = (data[6] << 16) | ecValue;
